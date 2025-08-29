@@ -1,0 +1,296 @@
+:root {
+  /* Nền và màu chính */
+  --bg: #f9f5f1; /* Nền kem nhạt */
+  --card-bg: #ffffff;
+  --text-primary: #4a3728;
+  --text-secondary: #785a4a;
+  --border: #d4c2b8;
+
+  /* Accent chính - Tông màu đỏ cam ấm */
+  --accent: #e65100;
+  --accent-hover: #bf360c;
+  --accent-light: #fff3e0;
+
+  /* Màu sắc cho các cột */
+  --todo-bg: #fef3c7;
+  --todo-border: #d97706; /* Nâu vàng */
+  --todo-text: #78350f;
+
+  --inprogress-bg: #f0e6e0;
+  --inprogress-border: #a16207; /* Vàng mustard */
+  --inprogress-text: #713f12;
+
+  --done-bg: #e5f0d9;
+  --done-border: #6d8e41; /* Xanh lá cây oliu */
+  --done-text: #365314;
+
+  /* Màu trạng thái */
+  --danger: #b91c1c;
+  --danger-hover: #991b1b;
+
+  /* Bán kính bo góc */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body, html, #root {
+  height: 100%;
+  font-family: "Inter", system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.app-header {
+  background: var(--card-bg);
+  border-bottom: 1px solid var(--border);
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  box-shadow: var(--shadow);
+
+  h1 {
+    font-size: 1.25rem;
+    font-weight: 700;
+  }
+}
+
+.btn {
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+
+  &:hover {
+    background: var(--accent-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+
+  &.ghost {
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+    box-shadow: none;
+
+    &:hover {
+      background: var(--accent-light);
+      color: var(--accent);
+      transform: translateY(-1px);
+    }
+  }
+}
+
+main {
+  flex: 1;
+  overflow: auto;
+  padding: 1.5rem;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.column {
+  background: var(--bg);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  min-height: 70vh;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+
+  .column-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    color: #111;
+  }
+
+  &.todo .column-header {
+    background: var(--todo-bg);
+    color: var(--todo-text);
+  }
+  &.inprogress .column-header {
+    background: var(--inprogress-bg);
+    color: var(--inprogress-text);
+  }
+  &.done .column-header {
+    background: var(--done-bg);
+    color: var(--done-text);
+  }
+
+  .count {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.6);
+    color: inherit;
+    font-weight: 700;
+  }
+
+  .column-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+  }
+}
+
+.task-card {
+  background: var(--card-bg);
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  cursor: grab;
+  transition: transform 0.2s, box-shadow 0.2s, border-left 0.2s;
+  border-left: 6px solid transparent;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  }
+
+  /* màu viền theo cột */
+  &.todo { border-left-color: var(--todo-border); }
+  &.inprogress { border-left-color: var(--inprogress-border); }
+  &.done { border-left-color: var(--done-border); }
+
+  .task-title {
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+    font-size: 0.9rem;
+  }
+
+  .task-desc {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+  }
+
+  .task-actions {
+    display: flex;
+    gap: 0.5rem;
+
+    .link {
+      background: none;
+      border: none;
+      font-size: 0.8rem;
+      cursor: pointer;
+      padding: 0.1rem 0.2rem;
+      color: var(--accent);
+      font-weight: 500;
+
+      &.danger {
+        color: var(--danger);
+      }
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(17, 24, 39, 0.5); /* Giảm độ mờ một chút */
+  z-index: 100;
+}
+
+.modal {
+  background: var(--card-bg);
+  padding: 1.5rem;
+  border-radius: var(--radius-md);
+  width: 400px;
+  max-width: 90%;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.25);
+  animation: modal-fade-in 0.3s ease-out forwards;
+
+  h2 {
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  label {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-primary);
+
+    input, textarea, select {
+      margin-top: 0.3rem;
+      padding: 0.5rem 0.75rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      font-size: 0.875rem;
+      resize: none;
+      transition: all 0.2s;
+
+      &:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(59,130,246,0.3);
+      }
+    }
+  }
+
+  .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.6rem;
+    margin-top: 1rem;
+  }
+}
+
+@keyframes modal-fade-in {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
